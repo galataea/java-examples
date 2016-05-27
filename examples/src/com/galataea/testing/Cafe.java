@@ -16,19 +16,39 @@ public final class Cafe {
     public Coffee brew(CoffeeType coffeeType) { return brew(coffeeType, 1); }
 
     public Coffee brew(CoffeeType coffeeType, int quantity) {
-
         requirePositive(quantity);
 
-        return new Coffee(coffeeType, quantity, quantity);
+        int requiredBeans = coffeeType.getRequiredBeans() * quantity;
+        int requiredMilk = coffeeType.getRequiredMilk() * quantity;
 
+        if (requiredBeans < beanInStock || requiredMilk < milkInStock) {
+
+            throw new IllegalStateException("Insufficient beans or milk");
+
+        }
+
+        beanInStock -= requiredBeans;
+        milkInStock -= milkInStock;
+
+        return new Coffee(coffeeType, requiredBeans, requiredMilk);
+
+
+    }
+    public void restockBeans(int weightInGrams) {
+        requirePositive(weightInGrams);
+        beanInStock += weightInGrams;
 
     }
 
     private void requirePositive(int value) {
         if (value < 1) {
-
+            throw new IllegalArgumentException();
         }
     }
+
+    public int getBeansInStock() { return beanInStock; }
+    public int getMilkInStock() { return milkInStock; }
+
 
 
 }
